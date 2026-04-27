@@ -48,19 +48,19 @@ Relevant setup in this project:
 
 Base API prefix: `/api`
 
-| Method | Endpoint | Auth Required | Description |
-|---|---|---|---|
-| GET | `/api/health` | No | Basic health check |
-| POST | `/api/register` | No | Register a user and start session |
-| POST | `/api/login` | No | Log in and start session |
-| GET | `/api/user` | Yes (`auth:sanctum`) | Get current authenticated user |
-| POST | `/api/logout` | Yes (`auth:sanctum`) | Log out and invalidate session |
+| Method | Endpoint        | Auth Required        | Description                       |
+|--------|-----------------|----------------------|-----------------------------------|
+| GET    | `/api/health`   | No                   | Basic health check                |
+| POST   | `/api/register` | No                   | Register a user and start session |
+| POST   | `/api/login`    | No                   | Log in and start session          |
+| GET    | `/api/user`     | Yes (`auth:sanctum`) | Get current authenticated user    |
+| POST   | `/api/logout`   | Yes (`auth:sanctum`) | Log out and invalidate session    |
 
 Sanctum CSRF endpoint:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/sanctum/csrf-cookie` | Issues CSRF token cookie for SPA auth |
+| Method | Endpoint               | Description                           |
+|--------|------------------------|---------------------------------------|
+| GET    | `/sanctum/csrf-cookie` | Issues CSRF token cookie for SPA auth |
 
 ---
 
@@ -77,3 +77,75 @@ Sanctum CSRF endpoint:
   "password": "secret123",
   "password_confirmation": "secret123"
 }
+```
+
+### Login
+
+`POST /api/login`
+
+```json
+{
+  "email": "jane@example.com",
+  "password": "secret123",
+  "remember": true
+}
+```
+
+---
+
+## Local Setup
+
+```bat
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
+
+If you are also running frontend assets:
+
+```bat
+npm install
+npm run dev
+```
+
+---
+
+## Environment Notes (SPA Auth)
+
+For cross-origin SPA login to work, verify these environment values in `.env`:
+
+- `APP_URL`
+- `SESSION_DOMAIN`
+- `SANCTUM_STATEFUL_DOMAINS`
+
+Also ensure your frontend HTTP client sends credentials (`withCredentials: true` in Axios, or `credentials: 'include'` in fetch).
+
+---
+
+## Testing
+
+```bat
+php artisan test
+```
+
+or
+
+```bat
+composer test
+```
+
+---
+
+## Security Notes
+
+- CSRF cookie must be fetched before login/register in SPA flow.
+- Keep `.env` secrets private.
+- Use secure cookie/session settings in production (HTTPS, proper domain config).
+
+---
+
+## License
+
+This project is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
